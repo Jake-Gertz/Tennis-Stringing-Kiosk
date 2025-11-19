@@ -94,3 +94,4 @@ The logic of the application is built on these core Java classes:
   ```bash
     ./gradlew run
   ```
+  Not: First time setup can take over a minute due to gradle setting everything up. Subsequent runs should take close to no time to start.
