@@ -89,14 +89,8 @@ The logic of the application is built on these core Java classes:
 ### How to Run
 
 1. Clone this repository (or download the source code).
-2. Open your terminal or command prompt and navigate to the root directory containing the `TennisStringingKiosk` folder.
-3. Compile all `.java` files:
-
-   ```bash
-   # This command compiles all the files required to run this program
-   javac TennisStringingKiosk/TennisKioskGUI.java
-4. Run the application (this file loads the program from scratch):
-
-   ```bash 
-   # Run the main class by specifying its full package path
-   java TennisStringingKiosk.TennisKioskGUI
+2. Open your terminal or command prompt that is using git bash
+3. Use the command
+  ```bash
+    ./gradlew run
+  ```
