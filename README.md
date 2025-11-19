@@ -84,7 +84,7 @@ The logic of the application is built on these core Java classes:
 
 ### Prerequisites
 
-* [Java JDK 11](https://www.oracle.com/java/technologies/javase-jdk11-downloads.html) or newer (Java 8+ should also be compatible).
+* [Java JDK 21](https://www.oracle.com/java/technologies/javase-jdk21-downloads.html) or newer (Java 8+ should also be compatible but not tested).
 
 ### How to Run
 
@@ -94,4 +94,4 @@ The logic of the application is built on these core Java classes:
   ```bash
     ./gradlew run
   ```
-  Not: First time setup can take over a minute due to gradle setting everything up. Subsequent runs should take close to no time to start.
+  Not: First time setup can take over a minute due to gradle setting everything up. Subsequent runs should take close to no time to start the GUI.
