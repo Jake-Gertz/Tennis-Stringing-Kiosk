@@ -84,7 +84,7 @@ The logic of the application is built on these core Java classes:
 
 ### Prerequisites
 
-* [Java JDK 21](https://www.oracle.com/java/technologies/javase-jdk21-downloads.html) or newer (Java 8+ should also be compatible but not tested).
+* [Java JDK 21](https://www.oracle.com/java/technologies/javase-jdk21-downloads.html) or newer (Java JDKs between 17 and 23 should also be compatible but this has not been tested fully)
 
 ### How to Run
 
