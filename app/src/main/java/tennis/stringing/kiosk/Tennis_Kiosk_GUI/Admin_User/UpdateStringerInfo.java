@@ -44,6 +44,11 @@ public class UpdateStringerInfo extends JFrame implements ActionListener {
         this.thisKiosk = thisKiosk;
         this.allStringers = thisKiosk.getStringers();
 
+        initializeGUI();
+        populateFields(); // Initial population
+    }
+
+    private void initializeGUI() {
         this.setTitle("Update Stringer Info");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setSize(screenWidth, screenHeight);
@@ -63,6 +68,7 @@ public class UpdateStringerInfo extends JFrame implements ActionListener {
         gbc.gridx = 0;
         gbc.weightx = 1.0;
         
+        // --- Title ---
         gbc.gridy = 0;
         gbc.gridwidth = 2;
         gbc.anchor = GridBagConstraints.CENTER;
@@ -73,12 +79,15 @@ public class UpdateStringerInfo extends JFrame implements ActionListener {
         titleLabel.setForeground(primaryColor);
         centerPanel.add(titleLabel, gbc);
 
+        // --- Stringer Selector Panel ---
         gbc.gridy = 1;
         gbc.weighty = 0; 
         gbc.insets = new Insets(60, 15, 40, 15); 
+        
         JLabel selectLabel = new JLabel("Select Stringer:");
         selectLabel.setFont(labelFont);
         
+        // JComboBox Initialization
         DefaultComboBoxModel<TennisStringer> model = new DefaultComboBoxModel<>();
         for (TennisStringer s : allStringers) {
             model.addElement(s);
@@ -107,6 +116,7 @@ public class UpdateStringerInfo extends JFrame implements ActionListener {
         
         centerPanel.add(selectorPanel, gbc);
 
+        // --- Input Fields Panel ---
         gbc.gridy = 2;
         gbc.weighty = 1.0; 
         gbc.gridwidth = 2;
@@ -125,6 +135,7 @@ public class UpdateStringerInfo extends JFrame implements ActionListener {
         fieldGBC.anchor = GridBagConstraints.WEST;
         fieldGBC.fill = GridBagConstraints.HORIZONTAL; 
 
+        // Name Field
         fieldGBC.gridx = 0;
         fieldGBC.gridy = 0;
         fieldGBC.weightx = 0;
@@ -140,6 +151,7 @@ public class UpdateStringerInfo extends JFrame implements ActionListener {
         stringerNameField.setFont(labelFont);
         inputPanel.add(stringerNameField, fieldGBC);
 
+        // ID Field
         fieldGBC.gridx = 0;
         fieldGBC.gridy = 1;
         fieldGBC.weightx = 0;
@@ -157,6 +169,7 @@ public class UpdateStringerInfo extends JFrame implements ActionListener {
         
         centerPanel.add(inputPanel, gbc);
 
+        // --- Button Panel (FIXED LAYOUT) ---
         gbc.gridy = 3;
         gbc.weighty = 0;
         gbc.gridwidth = 2;
@@ -164,11 +177,16 @@ public class UpdateStringerInfo extends JFrame implements ActionListener {
         gbc.anchor = GridBagConstraints.CENTER;
         gbc.fill = GridBagConstraints.NONE;
         
-        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 30, 0));
+        // Changed from FlowLayout to GridBagLayout for forced horizontal alignment
+        JPanel buttonPanel = new JPanel(new GridBagLayout()); 
         buttonPanel.setBackground(panelColor);
         
         Dimension buttonSize = new Dimension(180, 45);
+        GridBagConstraints buttonGBC = new GridBagConstraints();
+        buttonGBC.insets = new Insets(0, 15, 0, 15); // Added generous spacing between buttons
 
+        // 1. Back Button
+        buttonGBC.gridx = 0;
         backButton = new JButton("Back");
         backButton.setPreferredSize(buttonSize);
         backButton.setFont(buttonFont);
@@ -176,8 +194,10 @@ public class UpdateStringerInfo extends JFrame implements ActionListener {
         backButton.setForeground(Color.WHITE);
         backButton.setFocusPainted(false);
         backButton.addActionListener(this);
-        buttonPanel.add(backButton);
+        buttonPanel.add(backButton, buttonGBC);
         
+        // 2. Update Button
+        buttonGBC.gridx = 1;
         updateButton = new JButton("Update Info");
         updateButton.setPreferredSize(buttonSize);
         updateButton.setFont(buttonFont);
@@ -185,8 +205,10 @@ public class UpdateStringerInfo extends JFrame implements ActionListener {
         updateButton.setForeground(Color.WHITE);
         updateButton.setFocusPainted(false);
         updateButton.addActionListener(this);
-        buttonPanel.add(updateButton);
+        buttonPanel.add(updateButton, buttonGBC);
 
+        // 3. Delete Button (Now guaranteed to be visible)
+        buttonGBC.gridx = 2;
         deleteButton = new JButton("Remove Stringer");
         deleteButton.setPreferredSize(buttonSize);
         deleteButton.setFont(buttonFont);
@@ -194,20 +216,44 @@ public class UpdateStringerInfo extends JFrame implements ActionListener {
         deleteButton.setForeground(Color.WHITE);
         deleteButton.setFocusPainted(false);
         deleteButton.addActionListener(this);
-        buttonPanel.add(deleteButton);
+        buttonPanel.add(deleteButton, buttonGBC);
 
         centerPanel.add(buttonPanel, gbc);
-                
+        
+        // --- Final placement of center panel on frame ---
         GridBagConstraints wrapperGBC = new GridBagConstraints();
         wrapperGBC.weightx = 1.0; 
         wrapperGBC.weighty = 1.0; 
         wrapperGBC.anchor = GridBagConstraints.CENTER;
         this.add(centerPanel, wrapperGBC);
         
-        populateFields();
         this.setLocationRelativeTo(null);
         this.setResizable(false);
         this.setVisible(true);
+    }
+
+    // --- Utility method to refresh the combo box ---
+    private void refreshStringerSelector() {
+        DefaultComboBoxModel<TennisStringer> model = (DefaultComboBoxModel<TennisStringer>) stringerSelector.getModel();
+        TennisStringer selected = (TennisStringer) stringerSelector.getSelectedItem();
+        
+        model.removeAllElements();
+        this.allStringers = thisKiosk.getStringers();
+        TennisStringer newSelection = null;
+        for (TennisStringer s : allStringers) {
+            model.addElement(s);
+            if (selected != null && s.equals(selected)) {
+                newSelection = s;
+            }
+        }
+        
+        if (newSelection != null) {
+            stringerSelector.setSelectedItem(newSelection);
+        } else if (model.getSize() > 0) {
+            stringerSelector.setSelectedIndex(0);
+        } else {
+            populateFields();
+        }
     }
 
     private void populateFields() {
@@ -241,6 +287,11 @@ public class UpdateStringerInfo extends JFrame implements ActionListener {
         } else if (e.getSource() == updateButton) {
             TennisStringer selectedStringer = (TennisStringer) stringerSelector.getSelectedItem();
             
+            if (selectedStringer == null) {
+                 JOptionPane.showMessageDialog(this, "Error: No stringer selected.", "Error", JOptionPane.ERROR_MESSAGE);
+                 return;
+            }
+            
             String newName = stringerNameField.getText();
             String newIdText = stringerIdField.getText();
 
@@ -257,6 +308,7 @@ public class UpdateStringerInfo extends JFrame implements ActionListener {
                 return;
             }
             
+            // Check for duplicate ID among *other* stringers
             for (TennisStringer s : allStringers) {
                 if (s.getUserID() == newUserID && s != selectedStringer) {
                     JOptionPane.showMessageDialog(this, "Error: User ID " + newUserID + " is already taken by " + s.getStringerName() + ".", "Input Error", JOptionPane.ERROR_MESSAGE);
@@ -264,15 +316,23 @@ public class UpdateStringerInfo extends JFrame implements ActionListener {
                 }
             }
 
+            // Perform Update
             selectedStringer.setStringerName(newName);
             selectedStringer.setUserID(newUserID);
+            
+            refreshStringerSelector(); 
+            populateFields();
+            
             JOptionPane.showMessageDialog(this, "Success: Stringer info updated.", "Success", JOptionPane.INFORMATION_MESSAGE);
-            new TennisKioskAdminPage(thisKiosk);
-            this.dispose();
 
         } else if (e.getSource() == deleteButton) {
             TennisStringer selectedStringer = (TennisStringer) stringerSelector.getSelectedItem();
             
+            if (selectedStringer == null) {
+                 JOptionPane.showMessageDialog(this, "Error: No stringer selected to remove.", "Error", JOptionPane.ERROR_MESSAGE);
+                 return;
+            }
+
             int racketsToString = selectedStringer.getRacketsToString();
             if (racketsToString > 0) {
                 JOptionPane.showMessageDialog(this, 
@@ -294,9 +354,11 @@ public class UpdateStringerInfo extends JFrame implements ActionListener {
 
             if (choice == JOptionPane.YES_OPTION) {
                 thisKiosk.removeStringer(selectedStringer);
+                
+                refreshStringerSelector(); 
+                populateFields(); 
+                
                 JOptionPane.showMessageDialog(this, "Stringer removed.", "Success", JOptionPane.INFORMATION_MESSAGE);
-                new TennisKioskAdminPage(thisKiosk);
-                this.dispose();
             }
         }
     }
