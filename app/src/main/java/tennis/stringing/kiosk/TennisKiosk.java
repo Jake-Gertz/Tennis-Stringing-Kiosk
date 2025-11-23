@@ -46,7 +46,7 @@ public class TennisKiosk {
     /**
      * This constructor allows you to create a brand new TennisKiosk.TennisKiosk object, this
      * kiosk will be initalized with a blank list of stringers, a blank list of available
-     * string, and an admin ID of 5555.
+     * string, and an admin ID of 9999.
      */
     public TennisKiosk () {
         this(new LinkedList<TennisStringer>(), new LinkedList<TennisString>(), 9999);
