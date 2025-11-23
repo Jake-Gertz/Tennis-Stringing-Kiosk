@@ -46,7 +46,7 @@ public class SeeStringList extends JFrame implements ActionListener {
 
         JPanel stringsPanel = new JPanel(new GridLayout(0, 4, 10, 10));
 
-        LinkedList<TennisString> availableStrings = thisKiosk.getString(); 
+        LinkedList<TennisString> availableStrings = thisKiosk.getLinkedListOfString(); 
 
         if (availableStrings.isEmpty()) {
             stringsPanel.add(new JLabel("There are no current strings in stock."));

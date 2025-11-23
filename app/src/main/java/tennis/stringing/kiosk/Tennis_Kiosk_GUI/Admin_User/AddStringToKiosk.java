@@ -49,7 +49,7 @@ public class AddStringToKiosk extends JFrame implements ActionListener {
         
         gbc.gridx = 1;
         gbc.anchor = GridBagConstraints.WEST;
-        brandComboBox = new JComboBox<>(TennisStringBrand.values());
+        brandComboBox = new JComboBox<TennisStringBrand>(TennisStringBrand.values());
         this.add(brandComboBox, gbc);
 
         gbc.gridx = 0;

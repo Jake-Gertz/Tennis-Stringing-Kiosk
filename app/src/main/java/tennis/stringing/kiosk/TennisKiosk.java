@@ -4,6 +4,7 @@ import java.util.LinkedList;
 
 import tennis.stringing.kiosk.Kiosk_User_Objects.TennisStringer;
 import tennis.stringing.kiosk.Racket_Object_Dependencies.TennisString;
+import tennis.stringing.kiosk.Racket_Object_Dependencies.Stringing_Kiosk_Enums.TennisStringBrand;
 
 /**
  * The TennisKiosk.TennisKiosk class is mean to help reprsent a phyiscal tennis kiosk. This class holds
@@ -71,14 +72,36 @@ public class TennisKiosk {
      * This method will return a shallow copy of the linked list
      * containing this kiosks TennisString objects.
      * 
-     * @return A LinkedList<TennisStringer>
+     * @return A TennisString[] array containing a shallow copy of the available strings.
      */
-    public LinkedList<TennisString> getString() {
+    public TennisString[] getString() {
+        TennisString[] retList = new TennisString[availableString.size()+1];
+        int i = 0;
+
+        for (TennisString ts: availableString) {
+            retList[i] = ts;
+            i++;
+        }
+
+        retList[i] = new TennisString(TennisStringBrand.DEFAULT, "Bring Your Own");
+
+        return retList;
+    }
+
+    /**
+     * This method will return a shallow copy of the linked list
+     * containing this kiosks TennisString objects.
+     * 
+     * @return A LinkedList<TennisString> containing a shallow copy of the available strings.
+     */
+    public LinkedList<TennisString> getLinkedListOfString() {
         LinkedList<TennisString> retList = new LinkedList<TennisString>();
 
-        for(TennisString ts: availableString) {
+        for (TennisString ts: availableString) {
             retList.addLast(ts);
         }
+
+        retList.addLast(new TennisString(TennisStringBrand.DEFAULT, "Bring Your Own"));
 
         return retList;
     }

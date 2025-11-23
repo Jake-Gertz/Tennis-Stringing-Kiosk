@@ -3,16 +3,14 @@ package tennis.stringing.kiosk.Tennis_Kiosk_GUI.Normal_User;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.LinkedList;
-
 import javax.swing.*;
+import javax.swing.border.TitledBorder;
 
 import tennis.stringing.kiosk.TennisKiosk;
 import tennis.stringing.kiosk.Kiosk_User_Objects.TennisPlayer;
 import tennis.stringing.kiosk.Racket_Object_Dependencies.TennisRacket;
 import tennis.stringing.kiosk.Racket_Object_Dependencies.TennisString;
 import tennis.stringing.kiosk.Racket_Object_Dependencies.Stringing_Kiosk_Enums.TennisRacketBrand;
-import tennis.stringing.kiosk.Racket_Object_Dependencies.Stringing_Kiosk_Enums.TennisStringBrand;
 
 public class DropOffRacket extends JFrame implements ActionListener {
     private Toolkit toolKit = Toolkit.getDefaultToolkit();
@@ -23,17 +21,14 @@ public class DropOffRacket extends JFrame implements ActionListener {
     private TennisPlayer thisPlayer;
     private TennisKiosk thisKiosk;
 
-    private final int NUMBER_OF_SUPORTED_BRANDS = 9;
-    private LinkedList<TennisString> availableString;
+    private TennisString[] availableStringArray;
 
     private JButton submitButton;
     private JButton exitButton;
-    private JButton selectedRacketButton;
-    private JButton selectedMainStringButton;
-    private JButton selectedCrossStringButton;
-    private JButton[] jButtons;
-    private JButton[] mainStringOptions;
-    private JButton[] crossStringOptions;
+
+    private JComboBox<TennisRacketBrand> brandComboBox;
+    private JComboBox<TennisString> mainStringComboBox;
+    private JComboBox<TennisString> crossStringComboBox;
 
     private JTextField mainTension;
     private JTextField crossTension;
@@ -43,251 +38,223 @@ public class DropOffRacket extends JFrame implements ActionListener {
     private TennisString mainTennisString;
     private TennisString crossTennisString;
 
-    private final int STRING_LAYOUT_COLS = 3;
-    private final int MAIN_STRING_START_Y = 6;
-    private final int CROSS_STRING_START_Y = 10;
-
+    private Font titleFont = new Font("SansSerif", Font.BOLD, 32); 
+    private Font labelFont = new Font("SansSerif", Font.PLAIN, 16);
+    private Font buttonFont = new Font("SansSerif", Font.BOLD, 18);
+    
+    private Color backgroundColor = new Color(240, 248, 255);
+    private Color panelColor = Color.WHITE;
+    private Color primaryColor = new Color(0, 123, 255);
+    private Color secondaryColor = new Color(220, 53, 69);
 
     public DropOffRacket(TennisPlayer thisPlayer, TennisKiosk thisKiosk) {
         this.thisKiosk = thisKiosk;
         this.thisPlayer = thisPlayer;
 
-        jButtons = new JButton[NUMBER_OF_SUPORTED_BRANDS];
-        availableString = thisKiosk.getString();
+        this.availableStringArray = thisKiosk.getString();
 
         this.setTitle("Racket Drop Off");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setSize(screenWidth, screenHeight);
+        this.getContentPane().setBackground(backgroundColor);
 
         this.setLayout(new GridBagLayout());
 
+        JPanel centerPanel = new JPanel(new GridBagLayout());
+        centerPanel.setBackground(panelColor);
+        centerPanel.setPreferredSize(new Dimension(800, 750)); 
+        centerPanel.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createLineBorder(new Color(180, 180, 180), 1),
+            BorderFactory.createEmptyBorder(30, 30, 30, 30)
+        ));
+
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(5,5,5,5);
-        
+        gbc.insets = new Insets(15, 15, 15, 15);
         gbc.gridx = 0;
+        gbc.weightx = 1.0;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+
         gbc.gridy = 0;
         gbc.anchor = GridBagConstraints.CENTER;
-        gbc.gridwidth = 8;
-        this.add(new JLabel("Enter the brand of racket you're dropping off"), gbc);
-        gbc.gridwidth = 1;
-
-        gbc.gridx = 0;
-        gbc.gridy = 1;
-        gbc.anchor = GridBagConstraints.CENTER;
-        JButton babolotButton = new JButton("BABOLOT");
-        babolotButton.addActionListener(this);
-        babolotButton.setOpaque(true);
-        jButtons[0] = (babolotButton);
-        this.add(babolotButton, gbc);
-
-        gbc.gridx = 1;
-        gbc.gridy = 1;
-        gbc.anchor = GridBagConstraints.CENTER;
-        JButton wilsonButton = new JButton("WILSON");
-        wilsonButton.addActionListener(this);
-        wilsonButton.setOpaque(true); 
-        jButtons[1] = (wilsonButton);
-        this.add(wilsonButton, gbc);
-
-        gbc.gridx = 2;
-        gbc.gridy = 1;
-        gbc.anchor = GridBagConstraints.CENTER;
-        JButton headButton = new JButton("HEAD");
-        headButton.addActionListener(this);
-        headButton.setOpaque(true); 
-        jButtons[2] = (headButton);
-        this.add(headButton, gbc);
-
-        gbc.gridx = 3;
-        gbc.gridy = 1;
-        gbc.anchor = GridBagConstraints.CENTER;
-        JButton yonexButton = new JButton("YONEX");
-        yonexButton.addActionListener(this);
-        yonexButton.setOpaque(true); 
-        jButtons[3] = (yonexButton);
-        this.add(yonexButton, gbc);
-
-        gbc.gridx = 0;
-        gbc.gridy = 2;
-        gbc.anchor = GridBagConstraints.CENTER;
-        JButton tecnifibreButton = new JButton("TECNIFIBRE");
-        tecnifibreButton.addActionListener(this);
-        tecnifibreButton.setOpaque(true); 
-        jButtons[4] = (tecnifibreButton);
-        this.add(tecnifibreButton, gbc);
-
-        gbc.gridx = 1;
-        gbc.gridy = 2;
-        gbc.anchor = GridBagConstraints.CENTER;
-        JButton princeButton = new JButton("PRINCE");
-        princeButton.addActionListener(this);
-        princeButton.setOpaque(true); 
-        jButtons[5] = (princeButton);
-        this.add(princeButton, gbc);
-
-        gbc.gridx = 2;
-        gbc.gridy = 2;
-        gbc.anchor = GridBagConstraints.CENTER;
-        JButton dunlopButton = new JButton("DUNLOP");
-        dunlopButton.addActionListener(this);
-        dunlopButton.setOpaque(true); 
-        jButtons[6] = (dunlopButton);
-        this.add(dunlopButton, gbc);
-
-        gbc.gridx = 3;
-        gbc.gridy = 2;
-        gbc.anchor = GridBagConstraints.CENTER;
-        JButton solincoButton = new JButton("SOLINCO");
-        solincoButton.addActionListener(this);
-        solincoButton.setOpaque(true); 
-        jButtons[7] = (solincoButton);
-        this.add(solincoButton, gbc);
-
-        gbc.gridx = 4;
-        gbc.gridy = 2;
-        gbc.anchor = GridBagConstraints.CENTER;
-        JButton otherButton = new JButton("OTHER");
-        otherButton.addActionListener(this);
-        otherButton.setOpaque(true); 
-        jButtons[8] = (otherButton);
-        this.add(otherButton, gbc);
-
-        gbc.gridx = 0;
-        gbc.gridy = 3;
-        gbc.anchor = GridBagConstraints.CENTER;
-        gbc.gridwidth = 8;
-        this.add(new JLabel("Enter the Racket Model Name:"), gbc);
-        gbc.gridwidth = 1;
-
-        gbc.gridx = 0;
-        gbc.gridy = 4;
-        gbc.gridwidth = 8;
-        gbc.anchor = GridBagConstraints.CENTER;
-        enterRacketName = new JTextField();
-        enterRacketName.setColumns(20); 
-        this.add(enterRacketName, gbc);
-        gbc.gridwidth = 1;
-
-        gbc.gridx = 0;
-        gbc.gridy = 5;
-        gbc.anchor = GridBagConstraints.CENTER;
-        gbc.gridwidth = 8;
-        this.add(new JLabel("Pick what string you would like for the mains"), gbc);
-        gbc.gridwidth = 1;
-
-        mainStringOptions = new JButton[availableString.size() + 1];
-        int stringsInList = 0;
-
-        for(TennisString ts: availableString) {
-            int stringButtonX = stringsInList % STRING_LAYOUT_COLS;
-            int stringButtonY = MAIN_STRING_START_Y + (stringsInList / STRING_LAYOUT_COLS);
-
-            gbc.gridx = stringButtonX;
-            gbc.gridy = stringButtonY;
-            gbc.anchor = GridBagConstraints.CENTER;
-            JButton newButton = new JButton(ts.toString());
-            newButton.addActionListener(this);
-            newButton.setOpaque(true);
-            mainStringOptions[stringsInList] = (newButton);
-            this.add(newButton, gbc);
-            stringsInList++;
-        }
         
-        int stringButtonX = stringsInList % STRING_LAYOUT_COLS;
-        int stringButtonY = MAIN_STRING_START_Y + (stringsInList / STRING_LAYOUT_COLS);
-        gbc.gridx = stringButtonX;
-        gbc.gridy = stringButtonY;
+        JLabel titleLabel = new JLabel("Racket Drop Off");
+        titleLabel.setFont(titleFont);
+        titleLabel.setForeground(new Color(40, 40, 40)); 
+        centerPanel.add(titleLabel, gbc);
+        
+        JPanel racketInfoPanel = new JPanel(new GridBagLayout());
+        racketInfoPanel.setBackground(panelColor);
+        racketInfoPanel.setBorder(BorderFactory.createTitledBorder(
+            BorderFactory.createLineBorder(new Color(200, 200, 200)), 
+            "1. Racket Details", TitledBorder.LEFT, TitledBorder.TOP, labelFont, new Color(80, 80, 80)
+        ));
+        GridBagConstraints infoGBC = new GridBagConstraints();
+        infoGBC.insets = new Insets(10, 10, 10, 10);
+        infoGBC.fill = GridBagConstraints.HORIZONTAL;
+
+        infoGBC.gridx = 0;
+        infoGBC.gridy = 0;
+        infoGBC.anchor = GridBagConstraints.EAST;
+        
+        JLabel brandLabel = new JLabel("Racket Brand:");
+        brandLabel.setFont(labelFont);
+        racketInfoPanel.add(brandLabel, infoGBC);
+        
+        infoGBC.gridx = 1;
+        infoGBC.anchor = GridBagConstraints.WEST;
+        brandComboBox = new JComboBox<TennisRacketBrand>(TennisRacketBrand.values());
+        brandComboBox.setFont(labelFont);
+        brandComboBox.setPreferredSize(new Dimension(200, 30));
+        racketInfoPanel.add(brandComboBox, infoGBC);
+
+        infoGBC.gridx = 0;
+        infoGBC.gridy = 1;
+        infoGBC.anchor = GridBagConstraints.EAST;
+        
+        JLabel modelLabel = new JLabel("Racket Model Name:");
+        modelLabel.setFont(labelFont);
+        racketInfoPanel.add(modelLabel, infoGBC);
+        
+        infoGBC.gridx = 1;
+        infoGBC.anchor = GridBagConstraints.WEST;
+        enterRacketName = new JTextField();
+        enterRacketName.setColumns(20);
+        enterRacketName.setFont(labelFont);
+        racketInfoPanel.add(enterRacketName, infoGBC);
+        
+        gbc.gridy = 1;
+        gbc.fill = GridBagConstraints.NONE;
         gbc.anchor = GridBagConstraints.CENTER;
-        JButton byoButton = new JButton("Bring Your Own String");
-        byoButton.addActionListener(this);
-        byoButton.setOpaque(true);
-        mainStringOptions[stringsInList] = byoButton;
-        this.add(byoButton, gbc);
+        centerPanel.add(racketInfoPanel, gbc);
+        
+        JPanel stringPanel = new JPanel(new GridBagLayout());
+        stringPanel.setBackground(panelColor);
+        stringPanel.setBorder(BorderFactory.createTitledBorder(
+            BorderFactory.createLineBorder(new Color(200, 200, 200)), 
+            "2. String Selection", TitledBorder.LEFT, TitledBorder.TOP, labelFont, new Color(80, 80, 80)
+        ));
+        GridBagConstraints stringGBC = new GridBagConstraints();
+        stringGBC.insets = new Insets(10, 10, 10, 10);
+        stringGBC.fill = GridBagConstraints.HORIZONTAL;
 
-        gbc.gridx = 0;
-        gbc.gridy = 9;
-        gbc.anchor = GridBagConstraints.CENTER;
-        gbc.gridwidth = 8;
-        this.add(new JLabel("Pick what string you would like for the crosses"), gbc);
-        gbc.gridwidth = 1;
+        stringGBC.gridx = 0;
+        stringGBC.gridy = 0;
+        stringGBC.anchor = GridBagConstraints.EAST;
+        
+        JLabel mainStringLabel = new JLabel("Pick Main String:");
+        mainStringLabel.setFont(labelFont);
+        stringPanel.add(mainStringLabel, stringGBC);
 
-        crossStringOptions = new JButton[availableString.size() + 1];
-        stringsInList = 0;
+        stringGBC.gridx = 1;
+        stringGBC.anchor = GridBagConstraints.WEST;
+        mainStringComboBox = new JComboBox<TennisString>(availableStringArray);
+        mainStringComboBox.setFont(labelFont);
+        mainStringComboBox.setPreferredSize(new Dimension(300, 30));
+        stringPanel.add(mainStringComboBox, stringGBC);
 
-        for(TennisString ts: availableString) {
-            stringButtonX = stringsInList % STRING_LAYOUT_COLS;
-            stringButtonY = CROSS_STRING_START_Y + (stringsInList / STRING_LAYOUT_COLS); 
+        stringGBC.gridx = 0;
+        stringGBC.gridy = 1;
+        stringGBC.anchor = GridBagConstraints.EAST;
+        
+        JLabel crossStringLabel = new JLabel("Pick Cross String:");
+        crossStringLabel.setFont(labelFont);
+        stringPanel.add(crossStringLabel, stringGBC);
 
-            gbc.gridx = stringButtonX;
-            gbc.gridy = stringButtonY;
-            gbc.anchor = GridBagConstraints.CENTER;
-            JButton newButton = new JButton(ts.toString());
-            newButton.addActionListener(this);
-            newButton.setOpaque(true);
-            crossStringOptions[stringsInList] = (newButton);
-            this.add(newButton, gbc);
-            stringsInList++;
-        }
+        stringGBC.gridx = 1;
+        stringGBC.anchor = GridBagConstraints.WEST;
+        crossStringComboBox = new JComboBox<TennisString>(availableStringArray);
+        crossStringComboBox.setFont(labelFont);
+        crossStringComboBox.setPreferredSize(new Dimension(300, 30));
+        stringPanel.add(crossStringComboBox, stringGBC);
 
-        stringButtonX = stringsInList % STRING_LAYOUT_COLS;
-        stringButtonY = CROSS_STRING_START_Y + (stringsInList / STRING_LAYOUT_COLS);
-        gbc.gridx = stringButtonX;
-        gbc.gridy = stringButtonY;
-        gbc.anchor = GridBagConstraints.CENTER;
-        JButton byoCrossButton = new JButton("Bring Your Own String");
-        byoCrossButton.addActionListener(this);
-        byoCrossButton.setOpaque(true);
-        crossStringOptions[stringsInList] = byoCrossButton;
-        this.add(byoCrossButton, gbc);
+        gbc.gridy = 2;
+        centerPanel.add(stringPanel, gbc);
+        
+        JPanel tensionPanel = new JPanel(new GridBagLayout());
+        tensionPanel.setBackground(panelColor);
+        tensionPanel.setBorder(BorderFactory.createTitledBorder(
+            BorderFactory.createLineBorder(new Color(200, 200, 200)), 
+            "3. Tension Settings", TitledBorder.LEFT, TitledBorder.TOP, labelFont, new Color(80, 80, 80)
+        ));
+        GridBagConstraints tensionGBC = new GridBagConstraints();
+        tensionGBC.insets = new Insets(10, 10, 10, 10);
+        
+        tensionGBC.gridx = 0;
+        tensionGBC.gridy = 0;
+        tensionGBC.gridwidth = 4;
+        tensionGBC.anchor = GridBagConstraints.CENTER;
+        JLabel tensionInstruction = new JLabel("Enter your rackets main and cross tension (Or 0 for default, 1 for high altitude, 2 for low altitude)");
+        tensionInstruction.setFont(labelFont);
+        tensionPanel.add(tensionInstruction, tensionGBC);
+        tensionGBC.gridwidth = 1;
 
-        gbc.gridx = 0;
-        gbc.gridy = 12;
-        gbc.anchor = GridBagConstraints.CENTER;
-        gbc.gridwidth = 8;
-        this.add(new JLabel("Enter your rackets main and cross tension"), gbc);
-        gbc.gridwidth = 1;
+        tensionGBC.gridx = 0;
+        tensionGBC.gridy = 1;
+        tensionGBC.anchor = GridBagConstraints.EAST;
+        
+        JLabel mainTensionLabel = new JLabel("Main Tension: ");
+        mainTensionLabel.setFont(labelFont);
+        tensionPanel.add(mainTensionLabel, tensionGBC);
 
-        gbc.gridx = 0;
-        gbc.gridy = 13;
-        gbc.anchor = GridBagConstraints.CENTER;
-        this.add(new JLabel("Main Tension: "), gbc);
-
-        gbc.gridx = 1;
-        gbc.gridy = 13;
-        gbc.anchor = GridBagConstraints.CENTER;
+        tensionGBC.gridx = 1;
+        tensionGBC.anchor = GridBagConstraints.WEST;
         mainTension = new JTextField();
         mainTension.setColumns(5);
-        this.add(mainTension, gbc);
+        mainTension.setFont(labelFont);
+        tensionPanel.add(mainTension, tensionGBC);
 
-        gbc.gridx = 2;
-        gbc.gridy = 13;
-        gbc.anchor = GridBagConstraints.CENTER;
-        this.add(new JLabel("Cross Tension: "), gbc);
+        tensionGBC.gridx = 2;
+        tensionGBC.anchor = GridBagConstraints.EAST;
+        
+        JLabel crossTensionLabel = new JLabel("Cross Tension: ");
+        crossTensionLabel.setFont(labelFont);
+        tensionPanel.add(crossTensionLabel, tensionGBC);
 
-        gbc.gridx = 3;
-        gbc.gridy = 13;
-        gbc.anchor = GridBagConstraints.CENTER;
+        tensionGBC.gridx = 3;
+        tensionGBC.anchor = GridBagConstraints.WEST;
         crossTension = new JTextField();
         crossTension.setColumns(5);
-        this.add(crossTension, gbc);
+        crossTension.setFont(labelFont);
+        tensionPanel.add(crossTension, tensionGBC);
+        
+        gbc.gridy = 3;
+        centerPanel.add(tensionPanel, gbc);
 
-        gbc.gridx = 0;
-        gbc.gridy = 14;
-        gbc.gridwidth = 4;
-        gbc.anchor = GridBagConstraints.CENTER;
+        JPanel buttonPanel = new JPanel(new GridBagLayout());
+        buttonPanel.setBackground(panelColor);
+        GridBagConstraints buttonGBC = new GridBagConstraints();
+        buttonGBC.insets = new Insets(20, 30, 20, 30);
+        
+        Dimension buttonSize = new Dimension(220, 50);
+
         submitButton = new JButton("SUBMIT");
+        submitButton.setPreferredSize(buttonSize);
+        submitButton.setFont(buttonFont);
+        submitButton.setBackground(primaryColor);
+        submitButton.setForeground(Color.WHITE);
+        submitButton.setFocusPainted(false);
         submitButton.addActionListener(this);
-        submitButton.setOpaque(true);
-        this.add(submitButton, gbc);
+        buttonGBC.gridx = 0;
+        buttonPanel.add(submitButton, buttonGBC);
 
-        gbc.gridx = 4;
-        gbc.gridy = 14;
-        gbc.gridwidth = 4;
-        gbc.anchor = GridBagConstraints.CENTER;
         exitButton = new JButton("EXIT");
+        exitButton.setPreferredSize(buttonSize);
+        exitButton.setFont(buttonFont);
+        exitButton.setBackground(secondaryColor);
+        exitButton.setForeground(Color.WHITE);
+        exitButton.setFocusPainted(false);
         exitButton.addActionListener(this);
-        exitButton.setOpaque(true);
-        this.add(exitButton, gbc);
+        buttonGBC.gridx = 1;
+        buttonPanel.add(exitButton, buttonGBC);
+
+        gbc.gridy = 4;
+        centerPanel.add(buttonPanel, gbc);
+        
+        GridBagConstraints wrapperGBC = new GridBagConstraints();
+        wrapperGBC.weightx = 1.0; 
+        wrapperGBC.weighty = 1.0;
+        wrapperGBC.anchor = GridBagConstraints.CENTER;
+        this.add(centerPanel, wrapperGBC); 
 
         this.setLocationRelativeTo(null);
         this.setResizable(false);
@@ -301,14 +268,16 @@ public class DropOffRacket extends JFrame implements ActionListener {
             this.dispose();
             
         } else if(e.getSource() == submitButton) {
-
             String racketName = enterRacketName.getText();
+            int mainStringTension = 0;
+            int crossStringTension = 0;
+            racketBrand = (TennisRacketBrand) brandComboBox.getSelectedItem();
+            mainTennisString = (TennisString) mainStringComboBox.getSelectedItem();
+            crossTennisString = (TennisString) crossStringComboBox.getSelectedItem();
+
             if (racketName == null || racketName.trim().isEmpty()) {
                 racketName = "DEFAULT";
             }
-            
-            int mainStringTension = 0;
-            int crossStringTension = 0;
 
             try {
                 mainStringTension = Integer.parseInt(mainTension.getText());
@@ -329,75 +298,6 @@ public class DropOffRacket extends JFrame implements ActionListener {
                 thisPlayer.addRacketToString(newRacket);
                 new TennisKioskUserPage(thisPlayer, thisKiosk);
                 this.dispose();
-            }
-        } else {
-
-            for (int i = 0; i < NUMBER_OF_SUPORTED_BRANDS; i++) {
-                jButtons[i].setBackground(Color.WHITE);
-            } 
-            for (int i = 0; i < mainStringOptions.length; i++) {
-                mainStringOptions[i].setBackground(Color.WHITE);
-            } 
-            for (int i = 0; i < crossStringOptions.length; i++) {
-                crossStringOptions[i].setBackground(Color.WHITE);
-            }
-            
-            for (int i = 0; i < NUMBER_OF_SUPORTED_BRANDS; i++) {
-                if(e.getSource() == jButtons[i]) {
-                    selectedRacketButton = jButtons[i];
-                    try {
-
-                        switch (i) {
-                            case 0: racketBrand = TennisRacketBrand.BABOLAT; break;
-                            case 1: racketBrand = TennisRacketBrand.WILSON; break;
-                            case 2: racketBrand = TennisRacketBrand.HEAD; break;
-                            case 3: racketBrand = TennisRacketBrand.YONEX; break;
-                            case 4: racketBrand = TennisRacketBrand.TECNIFIBRE; break;
-                            case 5: racketBrand = TennisRacketBrand.PRINCE; break;
-                            case 6: racketBrand = TennisRacketBrand.DUNLOP; break;
-                            case 7: racketBrand = TennisRacketBrand.SOLINCO; break;
-                            case 8: racketBrand = TennisRacketBrand.DEFAULT; break; // Assumes "OTHER" button maps to "DEFAULT" enum
-                        }
-                    } catch (Exception ex) {
-                        System.err.println("Error matching racket brand: " + ex.getMessage());
-                    }
-                }
-            } 
-            
-            for (int i = 0; i < mainStringOptions.length; i++) {
-                if(e.getSource() == mainStringOptions[i]) {
-                    selectedMainStringButton = mainStringOptions[i];
-                    
-                    if (i == mainStringOptions.length - 1) {
-                        mainTennisString = new TennisString(TennisStringBrand.DEFAULT, "USER PROVIDED");
-                    } else {
-                        mainTennisString = availableString.get(i);
-                    }
-                }
-            } 
-
-            for (int i = 0; i < crossStringOptions.length; i++) {
-                if(e.getSource() == crossStringOptions[i]) {
-                    selectedCrossStringButton = crossStringOptions[i];
-
-                    if (i == crossStringOptions.length - 1) {
-                        crossTennisString = new TennisString(TennisStringBrand.DEFAULT, "USER PROVIDED");
-                    } else {
-                        crossTennisString = availableString.get(i);
-                    }
-                }
-            }
-            
-            if (selectedRacketButton != null) {
-                selectedRacketButton.setBackground(Color.RED);
-            }
-
-            if (selectedMainStringButton != null) {
-                selectedMainStringButton.setBackground(Color.RED);
-            }
-
-            if (selectedCrossStringButton != null) {
-                selectedCrossStringButton.setBackground(Color.RED);
             }
         }
     }

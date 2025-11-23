@@ -89,8 +89,8 @@ public class TennisKioskAdminPage extends JFrame implements ActionListener {
         updateAdminInfo.addActionListener(this);
         this.add(updateAdminInfo, gbc);
 
-        gbc.gridx = 8;
-        gbc.gridy = 5;
+        gbc.gridx = 0;
+        gbc.gridy = 7;
         gbc.anchor = GridBagConstraints.CENTER;
         gbc.gridwidth = 3;
         gbc.gridheight = 2;

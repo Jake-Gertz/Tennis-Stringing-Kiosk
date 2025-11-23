@@ -128,7 +128,7 @@ public class TennisString {
      */
     @Override
     public String toString() {
-        return ("String Brand:    " + stringBrand.toString() + "\nString Name:    " + stringName);
+        return ("Brand: " + stringBrand.toString() + " | Name: " + stringName);
     }
 
 }
