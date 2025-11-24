@@ -84,6 +84,16 @@ public class TennisStringer {
     }
 
     /**
+     * This getter returns the size of the linked list of players
+     * as an int.
+     * 
+     * @return An int representing how many players this stringer has
+     */
+    public int getNumberOfPlayers() {
+        return players.size();
+    }
+
+    /**
      * This method returns how many total rackets to string 
      * a particular stringer has by checking how many 
      * rackets to string each player they are assigned has

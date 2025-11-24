@@ -99,6 +99,25 @@ public class TennisString {
     }
 
     /**
+     * A getter that returns the string brand of this 
+     * Tennis String object
+     * 
+     * @return A TennisStringBrand object that represents this strings brand
+     */
+    public TennisStringBrand getStringBrand() {
+        return this.stringBrand;
+    }
+
+    /**
+     * A getter that returns the name of this Tennis String object
+     * 
+     * @return A String representing this string objects name
+     */
+    public String getStringName() {
+        return this.stringName;
+    }
+
+    /**
      * A getter that returns a boolean representing weather the string is in stock or not
      * 
      * @return A boolean: True for in stock, False for out of stock

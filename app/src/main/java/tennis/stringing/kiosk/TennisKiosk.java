@@ -247,5 +247,25 @@ public class TennisKiosk {
         return availableString.remove(string);
     }
 
+    /**
+     * A getter that returns the size of the linked list 
+     * of stringers that this kiosk holds
+     * 
+     * @return An int representing the size of the stringers linked list
+     */
+    public int getNumberOfStringers() {
+        return stringers.size();
+    }
+
+    /**
+     * A getter that returns the size of the linked list 
+     * of available strings that this kiosk holds.
+     * 
+     * @return An int representing the number of strings in this kiosk available strings linked list
+     */
+    public int getNumberOfStrings() {
+        return availableString.size();
+    }
+
 }
 

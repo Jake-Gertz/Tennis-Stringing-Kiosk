@@ -255,6 +255,27 @@ public class TennisPlayer {
     }
 
     /**
+     * A getter that returns a copy of both 
+     * the rackets to pick up list and the 
+     * rackets to string list concatonated together
+     * 
+     * @return A LinkedList<TennisRacket> representing all rackets needing to be strung or picked up for this player
+     */
+    public LinkedList<TennisRacket> getAllRackets() {
+        LinkedList<TennisRacket> retList = new LinkedList<TennisRacket>();
+
+        for (TennisRacket tr: racketsToPickUp) {
+            retList.addLast(tr);
+        }
+
+        for (TennisRacket tr: racketsToString) {
+            retList.addLast(tr);
+        }
+
+        return retList;
+    }
+
+    /**
      * A method that returns the toString method of every 
      * TennisRacket object held within the rackets to pick up
      * linked list.
