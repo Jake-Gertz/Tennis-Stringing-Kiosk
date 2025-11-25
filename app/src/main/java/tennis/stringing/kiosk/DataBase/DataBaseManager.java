@@ -47,11 +47,25 @@ public class DataBaseManager {
 
     private TennisKiosk kioskToLoad;
 
+    /**
+     * A constructor that creates a new DataBaseManager
+     * object whith a black TennisKiosk to be loaded
+     * 
+     */
     public DataBaseManager() {
         kioskToLoad = new TennisKiosk();
     }
 
+    /**
+     * The loadKiosk() method is used to recover the data from the data
+     * base. All the data is read and put into a TennisKiosk object which 
+     * is then returned.
+     * 
+     * @return TennisKiosk object holding all the information for this TennisStringingKiosk
+     */
     public TennisKiosk loadKiosk() {
+        // Set up all the files objects that will need to be touched 
+        // in the loading of this kiosk
         File kioskInformationFile = new File(KIOSK_INFORMATION_FILE);
         File playerInformationFile = new File(PLAYER_INFORMATION_FILE);
         File racketInformationFile = new File(RACKET_INFORMATION_FILE);
@@ -59,10 +73,13 @@ public class DataBaseManager {
         File stringerInformationFile = new File(STRINGER_INFORMATION_FILE);
         File racketsStringInformationFile = new File(RACKETS_STRING_INFORMATION_FILE);
 
+        // makes sure that the kioskToLoad TennisKiosk object is blank before adding 
+        // all the fields stored in the data base to it
         kioskToLoad = new TennisKiosk();
         int numStringersInKiosk = 0;
         int numStringsInKiosk = 0;
 
+        // Places a scanner on the file that holds the top level information for our TennisKiosk
         try (Scanner kioskInformationScanner = new Scanner(kioskInformationFile)) {
                 if (kioskInformationScanner.hasNextLine()) {
                     Scanner lineScanner = new Scanner(kioskInformationScanner.nextLine());
@@ -77,13 +94,23 @@ public class DataBaseManager {
             System.out.println("File not found!");
         }
 
+        // A call to the private helper method readStrings
         readStrings(numStringsInKiosk, stringInformationFile);
 
+        // A call to the private helper method that reads kiosk users from the data base.
+        // Kiosk users include both stringers and players
         readKioskUsers(numStringersInKiosk, stringerInformationFile, playerInformationFile, racketInformationFile, racketsStringInformationFile);
 
         return kioskToLoad;
     }
 
+    /**
+     * StoreKiosk is a method that allows the current state of the tennisKiosk to be store
+     * within the data base so it can be accessed later and the data is persistent
+     * even if the program is closed.
+     * 
+     * @param kiosk the current TennisKiosk object you wish to store in the database
+     */
     public void storeKiosk(TennisKiosk kiosk) {
         /*
         * This section clears the Players, Rackets.
@@ -108,8 +135,7 @@ public class DataBaseManager {
         /* 
         * The secion that stores the infomation in the kioskInformation file 
         * the format of the file is a csv in the order as follows
-        * number of stringers, number of strings, admin ID number
-        * all fields are ints
+        * number of stringers (int), number of strings (int), admin ID number (int)
         */
         File kioskInformationFile = new File(KIOSK_INFORMATION_FILE);
 
@@ -123,7 +149,7 @@ public class DataBaseManager {
         /*
         * This section is the section that writes all available strings into the string.csv file.
         * all strings are formated in a csv with the following format
-        * String brand, string name, in stock, length in stock
+        * String brand (TennisStringBrand.toString()), string name (String), in stock (boolean), length in stock (int)
         */
         File stringInformationFile = new File(STRING_INFORMATION_FILE);
 
@@ -141,7 +167,7 @@ public class DataBaseManager {
         /*
         * This section writes this kiosks stringers to the 
         * stringers.csv file in the following format
-        * Stringer name, strung rackets, # of players, userID
+        * Stringer name (String), strung rackets (int), # of players (int), userID (int)
         */
         File stringerInformationFile = new File(STRINGER_INFORMATION_FILE);
 
@@ -158,21 +184,11 @@ public class DataBaseManager {
         }
     }
 
-    private void writePlayers(TennisStringer stringer) {
-        try (PrintWriter playerInformationPW = new PrintWriter(new FileOutputStream(PLAYER_INFORMATION_FILE, true))) {
-            LinkedList<TennisPlayer> players = stringer.getPlayers();
-
-            for(TennisPlayer tp: players) {
-                playerInformationPW.println(tp.getFirstName() + "," + tp.getLastName() + "," + tp.getTotalStrungRackets() + ","
-                                            + tp.getUserID() + "," + (tp.getNumberOfRacketsToPickUp() + tp.getNumberOfRacketsToString()));
-                writeRackets(tp);
-            }
-
-        } catch (FileNotFoundException e) {
-            System.out.println("File not found!");
-        }
-    }
-
+    /**
+     * The resetKiosk method allows for the data base holding information about this 
+     * tennis kiosk to be erased. The method touches each file within the data directory
+     * and erases all its contents hence restoring the data base to factory default
+     */
     public void resetKiosk() {
         try (PrintWriter pw1 = new PrintWriter(new File(KIOSK_INFORMATION_FILE));
              PrintWriter pw2 = new PrintWriter(new File(PLAYER_INFORMATION_FILE));
@@ -188,6 +204,37 @@ public class DataBaseManager {
         }
     }
 
+    /**
+     * This private helper method allows each tennis player belonging to a certain 
+     * TennisStringer object to be stored one by one in the data base.
+     * Tennis Players are store in the data base as a CSV formated in the following way
+     * first name (string), last name (string), total strung rackets (int), user ID (int), total rackets to pick up and drop off (int)
+     * 
+     * @param stringer The TennisStringer whos player objects you wish to store in the data base
+     */
+    private void writePlayers(TennisStringer stringer) {
+        try (PrintWriter playerInformationPW = new PrintWriter(new FileOutputStream(PLAYER_INFORMATION_FILE, true))) {
+            LinkedList<TennisPlayer> players = stringer.getPlayers();
+
+            for(TennisPlayer tp: players) {
+                playerInformationPW.println(tp.getFirstName() + "," + tp.getLastName() + "," + tp.getTotalStrungRackets() + ","
+                                            + tp.getUserID() + "," + (tp.getNumberOfRacketsToPickUp() + tp.getNumberOfRacketsToString()));
+                writeRackets(tp);
+            }
+
+        } catch (FileNotFoundException e) {
+            System.out.println("File not found!");
+        }
+    }
+
+    /**
+     * writeRackets is a private helper method that allows all TennisRacket objects
+     * belonging to a certain TennisPlayer object to be writen to the data base.
+     * Racket objects are stored to the data base in a CSV file formatted in the following way
+     * racket brand(TennisRacketBrand.toString()), racket model name (String), main tension (int), cross tension (int), last strung date (local date)
+     * 
+     * @param player The TennisPlayer object whos rackets you want to write to the data base
+     */
     private void writeRackets(TennisPlayer player) {
         try (PrintWriter racketInformationPW = new PrintWriter(new FileOutputStream(RACKET_INFORMATION_FILE, true))) {
             LinkedList<TennisRacket> racketsToString = player.getRacketsToString();
@@ -212,6 +259,14 @@ public class DataBaseManager {
         }
     }
 
+    /**
+     * writeString is a private helper method that writes the string a certain
+     * TennisRacket object is using for its mains and crosses to the data base.
+     * TennisString objects are stored in the data base as a CSV with the following format
+     * string brand (TennisStringBrand.toString()), string name (String), in stock status (boolean), length in stock (int)
+     * 
+     * @param racket The TennisRacket object whos strings need to be added to the data base 
+     */
     private void writeString(TennisRacket racket) {
         try (PrintWriter racketsStringInformationPW = new PrintWriter(new FileOutputStream(RACKETS_STRING_INFORMATION_FILE, true))) {
             TennisString mainString = racket.getMainString();
@@ -227,6 +282,14 @@ public class DataBaseManager {
         }
     }
 
+    /**
+     * The private helper method readStrings is a method that allows the strings
+     * held in the data base to be added to this tennis Kiosk objects avaiableStrings
+     * LinkedList<TennisString>
+     * 
+     * @param numberOfStrings an int representing how many strings the tennis kiosk should have
+     * @param fileToRead A File object pointing to the data base file holding the strings this kiosk has
+     */
     private void readStrings(int numberOfStrings, File fileToRead) {
         try (Scanner kioskStringScanner = new Scanner(fileToRead)) {
             for (int i = 0; i < numberOfStrings && kioskStringScanner.hasNextLine(); i++) {
@@ -249,6 +312,19 @@ public class DataBaseManager {
         }
     }
 
+    /**
+     * The readKioskUsers method allows the tennis kiosk to recover its list of 
+     * TennisStringer objects, the tennis stringers TennisPlayer objects, the 
+     * tennis players TennisRacket objects, and the tennis rackets TennisString 
+     * objects. This allows the TennisKiosk to be fully reconstructed from the 
+     * data base.
+     * 
+     * @param numStringersInKiosk An int represeting how many stringers are in this TennisKiosk
+     * @param stringerFile A File object pointing to the data base file holding all TennisStringer objects
+     * @param playerFile A File object pointing to the data base file holding all TennisPlayer objects
+     * @param racketFile A file object pointing to the data base file holding all TennisRacket objects
+     * @param racketStringFile A file object pointing to the data base file holding all TennisString objects held by TennisRackets
+     */
     private void readKioskUsers(int numStringersInKiosk, File stringerFile, File playerFile, File racketFile, File racketStringFile) {
         try (Scanner stringerFileScanner = new Scanner(stringerFile);
              Scanner playerFileScanner = new Scanner(playerFile);
