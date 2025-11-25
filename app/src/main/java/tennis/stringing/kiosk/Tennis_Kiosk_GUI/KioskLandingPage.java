@@ -45,21 +45,14 @@ public class KioskLandingPage extends JFrame implements ActionListener{
     private Color panelColor = Color.WHITE;
     private Color primaryColor = new Color(0, 123, 255);
 
-
-    public KioskLandingPage() {
-        tennisKiosk = new TennisKiosk();
-        TennisStringer stringer = new TennisStringer();
-        TennisPlayer tennisPlayer = new TennisPlayer("Jake", "Gertz");
-        stringer.addPlayer(tennisPlayer);
-        tennisKiosk.addStringer(stringer);
-        
-        initializeGUI(); 
-    }
-
     public KioskLandingPage(TennisKiosk thisKiosk) {
         this.tennisKiosk = thisKiosk;
         
         initializeGUI();
+    }
+
+    public KioskLandingPage() {
+        this(new TennisKiosk());
     }
     
     /**

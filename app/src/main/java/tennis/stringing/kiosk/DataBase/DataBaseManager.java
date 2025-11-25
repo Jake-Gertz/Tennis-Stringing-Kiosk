@@ -45,7 +45,11 @@ public class DataBaseManager {
     private final String STRINGER_INFORMATION_FILE = "stringers.csv";
     private final String RACKETS_STRING_INFORMATION_FILE = "racketsString.csv";
 
-    private TennisKiosk kioskToLoad = new TennisKiosk();
+    private TennisKiosk kioskToLoad;
+
+    public DataBaseManager() {
+        kioskToLoad = new TennisKiosk();
+    }
 
     public TennisKiosk loadKiosk() {
         File kioskInformationFile = new File(KIOSK_INFORMATION_FILE);
