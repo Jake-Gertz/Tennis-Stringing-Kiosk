@@ -7,6 +7,7 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
 import tennis.stringing.kiosk.TennisKiosk;
+import tennis.stringing.kiosk.DataBase.DataBaseManager;
 import tennis.stringing.kiosk.Kiosk_User_Objects.TennisPlayer;
 import tennis.stringing.kiosk.Kiosk_User_Objects.TennisStringer;
 import tennis.stringing.kiosk.Tennis_Kiosk_GUI.KioskLandingPage;
@@ -41,6 +42,9 @@ public class TennisStringerPage extends JFrame implements ActionListener {
         this.thisStringer = thisStringer;
         this.thisKiosk = thisKiosk;
         this.userName = thisStringer.getStringerName();
+
+        DataBaseManager dbManager = new DataBaseManager();
+        dbManager.storeKiosk(thisKiosk);
 
         this.setTitle("Stringer Home Page");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

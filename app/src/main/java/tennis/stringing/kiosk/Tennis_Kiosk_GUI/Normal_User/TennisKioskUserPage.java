@@ -1,10 +1,5 @@
 package tennis.stringing.kiosk.Tennis_Kiosk_GUI.Normal_User;
 
-import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -19,6 +14,7 @@ import javax.swing.JSeparator;
 import javax.swing.SwingConstants;
 
 import tennis.stringing.kiosk.TennisKiosk;
+import tennis.stringing.kiosk.DataBase.DataBaseManager;
 import tennis.stringing.kiosk.Kiosk_User_Objects.TennisPlayer;
 import tennis.stringing.kiosk.Tennis_Kiosk_GUI.KioskLandingPage;
 
@@ -56,6 +52,9 @@ public class TennisKioskUserPage extends JFrame implements ActionListener {
         this.thisPlayer = tennisPlayer;
         this.userName = tennisPlayer.getPlayerName();
 
+        DataBaseManager dbManager = new DataBaseManager();
+        dbManager.storeKiosk(thisKiosk);
+
         this.setTitle("Home Page");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setSize(screenWidth, screenHeight);
@@ -70,7 +69,6 @@ public class TennisKioskUserPage extends JFrame implements ActionListener {
             BorderFactory.createLineBorder(new Color(180, 180, 180), 1),
             new EmptyBorder(30, 30, 30, 30)
         ));
-        // ------------------------------------------
 
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(15, 20, 15, 20); 

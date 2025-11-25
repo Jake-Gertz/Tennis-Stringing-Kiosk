@@ -8,6 +8,7 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
 import tennis.stringing.kiosk.TennisKiosk;
+import tennis.stringing.kiosk.DataBase.DataBaseManager;
 import tennis.stringing.kiosk.Tennis_Kiosk_GUI.KioskLandingPage;
 
 public class TennisKioskAdminPage extends JFrame implements ActionListener {
@@ -36,6 +37,9 @@ public class TennisKioskAdminPage extends JFrame implements ActionListener {
 
     public TennisKioskAdminPage (TennisKiosk thisKiosk) {
         this.thisKiosk = thisKiosk;
+
+        DataBaseManager dbManager = new DataBaseManager();
+        dbManager.storeKiosk(thisKiosk);
 
         this.setTitle("Admin Page");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
