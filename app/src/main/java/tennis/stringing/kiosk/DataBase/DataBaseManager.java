@@ -38,12 +38,12 @@ import tennis.stringing.kiosk.Racket_Object_Dependencies.Stringing_Kiosk_Enums.T
  * @version 1.0
  */
 public class DataBaseManager {
-    private final String KIOSK_INFORMATION_FILE = "kioskInformation.csv";
-    private final String PLAYER_INFORMATION_FILE = "players.csv";
-    private final String RACKET_INFORMATION_FILE = "rackets.csv";
-    private final String STRING_INFORMATION_FILE = "string.csv";
-    private final String STRINGER_INFORMATION_FILE = "stringers.csv";
-    private final String RACKETS_STRING_INFORMATION_FILE = "racketsString.csv";
+    private final String KIOSK_INFORMATION_FILE = "./data/kioskInformation.csv";
+    private final String PLAYER_INFORMATION_FILE = "./data/players.csv";
+    private final String RACKET_INFORMATION_FILE = "./data/rackets.csv";
+    private final String STRING_INFORMATION_FILE = "./data/string.csv";
+    private final String STRINGER_INFORMATION_FILE = "./data/stringers.csv";
+    private final String RACKETS_STRING_INFORMATION_FILE = "./data/racketsString.csv";
 
     private TennisKiosk kioskToLoad;
 
@@ -63,12 +63,16 @@ public class DataBaseManager {
         int numStringersInKiosk = 0;
         int numStringsInKiosk = 0;
 
-        try (Scanner kioskInformationScanner = new Scanner(kioskInformationFile);
-             Scanner lineScanner = new Scanner(kioskInformationScanner.nextLine())) {
-                lineScanner.useDelimiter(",");
-                numStringersInKiosk = Integer.parseInt(lineScanner.next());
-                numStringsInKiosk = Integer.parseInt(lineScanner.next());
-                kioskToLoad.setAdminID(Integer.parseInt(lineScanner.next()));
+        try (Scanner kioskInformationScanner = new Scanner(kioskInformationFile)) {
+                if (kioskInformationScanner.hasNextLine()) {
+                    Scanner lineScanner = new Scanner(kioskInformationScanner.nextLine());
+                    lineScanner.useDelimiter(",");
+                    numStringersInKiosk = Integer.parseInt(lineScanner.next());
+                    numStringsInKiosk = Integer.parseInt(lineScanner.next());
+                    kioskToLoad.setAdminID(Integer.parseInt(lineScanner.next()));
+                    lineScanner.close();
+                }
+    
         } catch (FileNotFoundException e) {
             System.out.println("File not found!");
         }
@@ -167,7 +171,21 @@ public class DataBaseManager {
         } catch (FileNotFoundException e) {
             System.out.println("File not found!");
         }
+    }
 
+    public void resetKiosk() {
+        try (PrintWriter pw1 = new PrintWriter(new File(KIOSK_INFORMATION_FILE));
+             PrintWriter pw2 = new PrintWriter(new File(PLAYER_INFORMATION_FILE));
+             PrintWriter pw3 = new PrintWriter(new File(RACKET_INFORMATION_FILE));
+             PrintWriter pw4 = new PrintWriter(new File(STRING_INFORMATION_FILE));
+             PrintWriter pw5 = new PrintWriter(new File(STRINGER_INFORMATION_FILE));
+             PrintWriter pw6 = new PrintWriter(new File(RACKETS_STRING_INFORMATION_FILE))) {
+
+                // No Need for any into here since we are just calling the PW to clear out all
+                // information and files that were previously associated with this database
+        } catch (FileNotFoundException e) {
+            System.out.println("File not found!");
+        }
     }
 
     private void writeRackets(TennisPlayer player) {

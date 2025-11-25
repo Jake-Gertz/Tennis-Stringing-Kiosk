@@ -8,6 +8,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
 
 import tennis.stringing.kiosk.TennisKiosk;
+import tennis.stringing.kiosk.DataBase.DataBaseManager;
 import tennis.stringing.kiosk.Kiosk_User_Objects.TennisStringer;
 import tennis.stringing.kiosk.Racket_Object_Dependencies.TennisString;
 
@@ -271,6 +272,9 @@ public class UpdateAdminInfo extends JFrame implements ActionListener {
                     thisKiosk.updateTennisStringList(new LinkedList<TennisString>());
                     thisKiosk.setAdminID(9999);
                     thisKiosk.updatePickUpAndStrungCount();
+
+                    DataBaseManager dbManager = new DataBaseManager();
+                    dbManager.resetKiosk();
 
                     JOptionPane.showMessageDialog(this, "Kiosk has been reset to factory defaults.", "Reset Complete", JOptionPane.INFORMATION_MESSAGE);
                     
