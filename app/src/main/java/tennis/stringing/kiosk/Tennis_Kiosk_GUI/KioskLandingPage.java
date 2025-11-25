@@ -4,6 +4,7 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
 import tennis.stringing.kiosk.TennisKiosk;
+import tennis.stringing.kiosk.DataBase.DataBaseManager;
 import tennis.stringing.kiosk.Kiosk_User_Objects.TennisPlayer;
 import tennis.stringing.kiosk.Kiosk_User_Objects.TennisStringer;
 import tennis.stringing.kiosk.Tennis_Kiosk_GUI.Admin_User.TennisKioskAdminPage;
@@ -48,6 +49,9 @@ public class KioskLandingPage extends JFrame implements ActionListener{
     public KioskLandingPage(TennisKiosk thisKiosk) {
         this.tennisKiosk = thisKiosk;
         
+        DataBaseManager dbManager = new DataBaseManager();
+        dbManager.storeKiosk(thisKiosk);
+
         initializeGUI();
     }
 
