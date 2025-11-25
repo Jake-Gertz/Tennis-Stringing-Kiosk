@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.PrintWriter;
+import java.time.LocalDate;
 import java.util.LinkedList;
 import java.util.Scanner;
 
@@ -12,6 +13,8 @@ import tennis.stringing.kiosk.Kiosk_User_Objects.TennisPlayer;
 import tennis.stringing.kiosk.Kiosk_User_Objects.TennisStringer;
 import tennis.stringing.kiosk.Racket_Object_Dependencies.TennisRacket;
 import tennis.stringing.kiosk.Racket_Object_Dependencies.TennisString;
+import tennis.stringing.kiosk.Racket_Object_Dependencies.Stringing_Kiosk_Enums.TennisRacketBrand;
+import tennis.stringing.kiosk.Racket_Object_Dependencies.Stringing_Kiosk_Enums.TennisStringBrand;
 
 public class DataBaseManager {
     private final String KIOSK_INFORMATION_FILE = "kioskInformation.csv";
@@ -21,8 +24,33 @@ public class DataBaseManager {
     private final String STRINGER_INFORMATION_FILE = "stringers.csv";
     private final String RACKETS_STRING_INFORMATION_FILE = "racketsString.csv";
 
+    private TennisKiosk kioskToLoad = new TennisKiosk();
+
     public TennisKiosk loadKiosk() {
-        TennisKiosk kioskToLoad = new TennisKiosk();
+        File kioskInformationFile = new File(KIOSK_INFORMATION_FILE);
+        File playerInformationFile = new File(PLAYER_INFORMATION_FILE);
+        File racketInformationFile = new File(RACKET_INFORMATION_FILE);
+        File stringInformationFile = new File(STRING_INFORMATION_FILE);
+        File stringerInformationFile = new File(STRINGER_INFORMATION_FILE);
+        File racketsStringInformationFile = new File(RACKETS_STRING_INFORMATION_FILE);
+
+        kioskToLoad = new TennisKiosk();
+        int numStringersInKiosk = 0;
+        int numStringsInKiosk = 0;
+
+        try (Scanner kioskInformationScanner = new Scanner(kioskInformationFile);
+             Scanner lineScanner = new Scanner(kioskInformationScanner.nextLine())) {
+                lineScanner.useDelimiter(",");
+                numStringersInKiosk = Integer.parseInt(lineScanner.next());
+                numStringsInKiosk = Integer.parseInt(lineScanner.next());
+                kioskToLoad.setAdminID(Integer.parseInt(lineScanner.next()));
+        } catch (FileNotFoundException e) {
+            System.out.println("File not found!");
+        }
+
+        readStrings(numStringsInKiosk, stringInformationFile);
+
+        readKioskUsers(numStringersInKiosk, stringerInformationFile, playerInformationFile, racketInformationFile, racketsStringInformationFile);
 
         return kioskToLoad;
     }
@@ -119,11 +147,20 @@ public class DataBaseManager {
 
     private void writeRackets(TennisPlayer player) {
         try (PrintWriter racketInformationPW = new PrintWriter(new FileOutputStream(RACKET_INFORMATION_FILE, true))) {
-            LinkedList<TennisRacket> rackets = player.getAllRackets();
+            LinkedList<TennisRacket> racketsToString = player.getRacketsToString();
+            LinkedList<TennisRacket> racketsToPickUp = player.getRacketsToPickUp();
 
-            for (TennisRacket tr: rackets) {
+            for (TennisRacket tr: racketsToString) {
                 racketInformationPW.println(tr.getRacketBrand() + "," + tr.getRacketModelName() + "," + tr.getMainTension()
-                                            + "," + tr.getCrossTension() + "," + tr.getLastStrung().toString());
+                                            + "," + tr.getCrossTension() + "," + tr.getLastStrung().toString()
+                                            + "," + false);
+                writeString(tr);
+            }
+
+            for (TennisRacket tr: racketsToPickUp){
+                racketInformationPW.println(tr.getRacketBrand() + "," + tr.getRacketModelName() + "," + tr.getMainTension()
+                                            + "," + tr.getCrossTension() + "," + tr.getLastStrung().toString()
+                                            + "," + true);
                 writeString(tr);
             }
 
@@ -145,6 +182,120 @@ public class DataBaseManager {
         } catch (FileNotFoundException e) {
             System.out.println("File not found!");
         }
+    }
+
+    private void readStrings(int numberOfStrings, File fileToRead) {
+        try (Scanner kioskStringScanner = new Scanner(fileToRead)) {
+            for (int i = 0; i < numberOfStrings && kioskStringScanner.hasNextLine(); i++) {
+                Scanner lineScanner = new Scanner(kioskStringScanner.nextLine());
+                lineScanner.useDelimiter(",");
+                TennisStringBrand stringBrand = TennisStringBrand.valueOf(lineScanner.next());
+                String stringName = lineScanner.next();
+                boolean inStock = Boolean.parseBoolean(lineScanner.next());
+                int lengthInStock = Integer.parseInt(lineScanner.next());
+
+                TennisString stringToAdd = new TennisString(stringBrand, stringName, inStock, lengthInStock);
+
+                kioskToLoad.addTennisString(stringToAdd);
+
+                lineScanner.close();
+            }
+
+        } catch (FileNotFoundException e) {
+            System.out.println("File not found!");
+        }
+    }
+
+    private void readKioskUsers(int numStringersInKiosk, File stringerFile, File playerFile, File racketFile, File racketStringFile) {
+        try (Scanner stringerFileScanner = new Scanner(stringerFile);
+             Scanner playerFileScanner = new Scanner(playerFile);
+             Scanner racketFileScanner = new Scanner(racketFile);
+             Scanner racketsStringFileScanner = new Scanner(racketStringFile)) {
+
+            for (int i = 0; i < numStringersInKiosk && stringerFileScanner.hasNextLine(); i++) {
+                Scanner stringerLineScanner = new Scanner(stringerFileScanner.nextLine());
+                stringerLineScanner.useDelimiter(",");
+
+                String stringerName = stringerLineScanner.next();
+                int strungRackets = Integer.parseInt(stringerLineScanner.next());
+                int numberOfPlayers = Integer.parseInt(stringerLineScanner.next());
+                int userID = Integer.parseInt(stringerLineScanner.next());
+
+                TennisStringer stringerToAdd = new TennisStringer(strungRackets, stringerName);
+                stringerToAdd.setUserID(userID);
+
+                kioskToLoad.addStringer(stringerToAdd);
+
+                for (int j = 0; j < numberOfPlayers && playerFileScanner.hasNextLine(); j++) {
+                    Scanner playerLineScanner = new Scanner(playerFileScanner.nextLine());
+                    playerLineScanner.useDelimiter(",");
+
+                    String firstName = playerLineScanner.next();
+                    String lastName = playerLineScanner.next();
+                    int totalStrungRackets = Integer.parseInt(playerLineScanner.next());
+                    int playerID = Integer.parseInt(playerLineScanner.next());
+                    int numberOfRackets = Integer.parseInt(playerLineScanner.next());
+
+                    TennisPlayer playerToAdd = new TennisPlayer(firstName, lastName, totalStrungRackets, playerID);
+
+                    stringerToAdd.addPlayer(playerToAdd);
+
+                    playerLineScanner.close();
+
+                    for (int k = 0; k < numberOfRackets && racketFileScanner.hasNextLine(); k++) {
+                        Scanner racketLineScanner = new Scanner(racketFileScanner.nextLine());
+                        racketLineScanner.useDelimiter(",");
+
+                        TennisRacketBrand racketBrand = TennisRacketBrand.valueOf(racketLineScanner.next());
+                        String modelName = racketLineScanner.next();
+                        int mainTension = Integer.parseInt(racketLineScanner.next());
+                        int crossTension = Integer.parseInt(racketLineScanner.next());
+                        LocalDate lastStrung = LocalDate.parse(racketLineScanner.next());
+                        boolean readyForPickUp = Boolean.parseBoolean(racketLineScanner.next());
+                        TennisString mainString = null;
+                        TennisString crossString = null;
+
+                        for (int l = 0; l < 2 && racketsStringFileScanner.hasNextLine(); l++) {
+                            Scanner racketsStringLineScanner = new Scanner(racketsStringFileScanner.nextLine());
+                            racketsStringLineScanner.useDelimiter(",");
+
+                            TennisStringBrand stringBrand = TennisStringBrand.valueOf(racketsStringLineScanner.next());
+                            String stringName = racketsStringLineScanner.next();
+                            boolean inStock = Boolean.parseBoolean(racketsStringLineScanner.next());
+                            int lengthInStock = Integer.parseInt(racketsStringLineScanner.next());
+
+                            TennisString stringToAdd = new TennisString(stringBrand, stringName, inStock, lengthInStock);
+
+                            if (l == 0){
+                                mainString = stringToAdd;
+                            } else {
+                                crossString = stringToAdd;
+                            }
+
+                            racketsStringLineScanner.close();
+                        }
+
+                        TennisRacket racketToAdd = new TennisRacket(racketBrand, mainString, crossString, mainTension, crossTension);
+                        racketToAdd.setRacketModelName(modelName);
+                        racketToAdd.setLastStrungDate(lastStrung);
+
+                        if (readyForPickUp) {
+                            playerToAdd.addRacketToPickUp(racketToAdd);
+                        } else {
+                            playerToAdd.addRacketToString(racketToAdd);
+                        }
+
+                        racketLineScanner.close();
+                    }
+                }
+
+                stringerLineScanner.close();
+            }
+
+        } catch (FileNotFoundException e) {
+            System.out.println("File not found!");
+        }
+
     }
 }
  
