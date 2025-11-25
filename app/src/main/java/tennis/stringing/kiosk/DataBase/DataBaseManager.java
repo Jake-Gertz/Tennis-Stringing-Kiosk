@@ -16,6 +16,27 @@ import tennis.stringing.kiosk.Racket_Object_Dependencies.TennisString;
 import tennis.stringing.kiosk.Racket_Object_Dependencies.Stringing_Kiosk_Enums.TennisRacketBrand;
 import tennis.stringing.kiosk.Racket_Object_Dependencies.Stringing_Kiosk_Enums.TennisStringBrand;
 
+
+/**
+ * Manages the persistence layer for the Tennis Stringing Kiosk application.
+ *
+ * This class is responsible for loading the entire kiosk state from and storing it
+ * to multiple CSV files. It handles the hierarchical structure of the application data:
+ * Kiosk -> Stringers -> Players -> Rackets/Strings.
+ *
+ * The file structure used for persistence includes:
+ *
+ * kioskInformation.csv: General Kiosk details (counts, admin ID).
+ * string.csv: Global inventory of available tennis strings.
+ * stringers.csv: List of all stringers.
+ * players.csv: List of all players, nested under stringers (sequential read).
+ * rackets.csv: List of all rackets, nested under players (sequential read).
+ * racketsString.csv: Main and cross string details for each racket (sequential read).
+ *
+ * @author Jake Gertz
+ * @date 11/24/2025
+ * @version 1.0
+ */
 public class DataBaseManager {
     private final String KIOSK_INFORMATION_FILE = "kioskInformation.csv";
     private final String PLAYER_INFORMATION_FILE = "players.csv";
