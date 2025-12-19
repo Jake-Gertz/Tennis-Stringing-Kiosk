@@ -48,7 +48,8 @@ public class TennisRacket {
     private static final int DEFAULT_TENSION = 54;
     private static final TennisString DEFAULT_STRING = new TennisString(TennisStringBrand.DEFAULT, "DEFAULT");
     private static final TennisRacketBrand DEFAULT_BRAND = TennisRacketBrand.DEFAULT;
-    private static final LocalDate DEFAULT_DATE = LocalDate.of(0,0,0);
+    //TODO change the default date
+    private static final LocalDate DEFAULT_DATE = LocalDate.of(2025,3,3);
 
     /**
      * This constructor allows the creation of a tennis racket object.
@@ -353,7 +354,8 @@ public class TennisRacket {
         retString.append("Racket Brand:    " + racketBrandToString() + "\n");
         retString.append("Racket Name:    " + racketModelName + "\n\n");
         retString.append(stringsToString() + " \n\n");
-        if(!lastStrung.equals(LocalDate.of(0,0,0))) {
+        //TODO update when you change the default date
+        if(!lastStrung.equals(LocalDate.of(2025,3,3))) {
             retString.append("Last Strung:    " + lastStrung.toString());
         } else {
             retString.append("Last Strung:    NO PRIOR DATA");

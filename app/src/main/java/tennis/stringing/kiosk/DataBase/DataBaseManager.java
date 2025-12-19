@@ -38,6 +38,7 @@ import tennis.stringing.kiosk.Racket_Object_Dependencies.Stringing_Kiosk_Enums.T
  * @version 1.0
  */
 public class DataBaseManager {
+    //TODO update brand names in the data base
     private final String KIOSK_INFORMATION_FILE = "./data/kioskInformation.csv";
     private final String PLAYER_INFORMATION_FILE = "./data/players.csv";
     private final String RACKET_INFORMATION_FILE = "./data/rackets.csv";
