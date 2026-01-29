@@ -48,7 +48,7 @@ public class TennisRacket {
     private static final int DEFAULT_TENSION = 54;
     private static final TennisString DEFAULT_STRING = new TennisString(TennisStringBrand.DEFAULT, "DEFAULT");
     private static final TennisRacketBrand DEFAULT_BRAND = TennisRacketBrand.DEFAULT;
-    private static final LocalDate DEFAULT_DATE = LocalDate.of(0,0,0);
+    private static final LocalDate DEFAULT_DATE = LocalDate.of(2000, 1, 1);
 
     /**
      * This constructor allows the creation of a tennis racket object.
@@ -197,17 +197,20 @@ public class TennisRacket {
      * as the cross strings tension and brand
      * 
      * Format:
-     *     Main String:    "main string String"    Tension:    "int tension"
-     *     Cross String:    "cross string String"    Tension:    "int tension"
+     *     Main String:    "main string String"    
+     *     Tension:    "int tension"
+     * 
+     *     Cross String:    "cross string String"    
+     *     Tension:    "int tension"
      * 
      * @return A well formated string representing this rackets strings tension and brands
      */
     public String stringsToString() {
         StringBuilder retString = new StringBuilder();
-        retString.append("Main String:    " + mainString.toString());
-        retString.append("    Tension:    " + mainTension + " \n");
-        retString.append("Cross String:    " + crossString.toString());
-        retString.append("    Tension:    " + crossTension);
+        retString.append("Main String:\n" + mainString.toString());
+        retString.append("\n    Tension:    " + mainTension);
+        retString.append("\n\nCross String:\n" + crossString.toString());
+        retString.append("\n    Tension:    " + crossTension);
 
         return retString.toString();
     }
@@ -353,7 +356,7 @@ public class TennisRacket {
         retString.append("Racket Brand:    " + racketBrandToString() + "\n");
         retString.append("Racket Name:    " + racketModelName + "\n\n");
         retString.append(stringsToString() + " \n\n");
-        if(!lastStrung.equals(LocalDate.of(0,0,0))) {
+        if(!lastStrung.equals(LocalDate.of(2000,1,1))) {
             retString.append("Last Strung:    " + lastStrung.toString());
         } else {
             retString.append("Last Strung:    NO PRIOR DATA");

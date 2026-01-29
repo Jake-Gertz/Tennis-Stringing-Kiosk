@@ -38,12 +38,12 @@ import tennis.stringing.kiosk.Racket_Object_Dependencies.Stringing_Kiosk_Enums.T
  * @version 1.0
  */
 public class DataBaseManager {
-    private final String KIOSK_INFORMATION_FILE = "./data/kioskInformation.csv";
-    private final String PLAYER_INFORMATION_FILE = "./data/players.csv";
-    private final String RACKET_INFORMATION_FILE = "./data/rackets.csv";
-    private final String STRING_INFORMATION_FILE = "./data/string.csv";
-    private final String STRINGER_INFORMATION_FILE = "./data/stringers.csv";
-    private final String RACKETS_STRING_INFORMATION_FILE = "./data/racketsString.csv";
+    private final String KIOSK_INFORMATION_FILE = "app/data/kioskInformation.csv";
+    private final String PLAYER_INFORMATION_FILE = "app/data/players.csv";
+    private final String RACKET_INFORMATION_FILE = "app/data/rackets.csv";
+    private final String STRING_INFORMATION_FILE = "app/data/string.csv";
+    private final String STRINGER_INFORMATION_FILE = "app/data/stringers.csv";
+    private final String RACKETS_STRING_INFORMATION_FILE = "app/data/racketsString.csv";
 
     private TennisKiosk kioskToLoad;
 
@@ -295,7 +295,7 @@ public class DataBaseManager {
             for (int i = 0; i < numberOfStrings && kioskStringScanner.hasNextLine(); i++) {
                 Scanner lineScanner = new Scanner(kioskStringScanner.nextLine());
                 lineScanner.useDelimiter(",");
-                TennisStringBrand stringBrand = TennisStringBrand.valueOf(lineScanner.next());
+                TennisStringBrand stringBrand = TennisStringBrand.valueOf(lineScanner.next().toUpperCase());
                 String stringName = lineScanner.next();
                 boolean inStock = Boolean.parseBoolean(lineScanner.next());
                 int lengthInStock = Integer.parseInt(lineScanner.next());
@@ -365,7 +365,7 @@ public class DataBaseManager {
                         Scanner racketLineScanner = new Scanner(racketFileScanner.nextLine());
                         racketLineScanner.useDelimiter(",");
 
-                        TennisRacketBrand racketBrand = TennisRacketBrand.valueOf(racketLineScanner.next());
+                        TennisRacketBrand racketBrand = TennisRacketBrand.valueOf(racketLineScanner.next().toUpperCase());
                         String modelName = racketLineScanner.next();
                         int mainTension = Integer.parseInt(racketLineScanner.next());
                         int crossTension = Integer.parseInt(racketLineScanner.next());
@@ -378,7 +378,7 @@ public class DataBaseManager {
                             Scanner racketsStringLineScanner = new Scanner(racketsStringFileScanner.nextLine());
                             racketsStringLineScanner.useDelimiter(",");
 
-                            TennisStringBrand stringBrand = TennisStringBrand.valueOf(racketsStringLineScanner.next());
+                            TennisStringBrand stringBrand = TennisStringBrand.valueOf(racketsStringLineScanner.next().toUpperCase());
                             String stringName = racketsStringLineScanner.next();
                             boolean inStock = Boolean.parseBoolean(racketsStringLineScanner.next());
                             int lengthInStock = Integer.parseInt(racketsStringLineScanner.next());
